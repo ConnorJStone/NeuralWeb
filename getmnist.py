@@ -3,7 +3,8 @@ import os, struct
 from array import array as pyarray
 from numpy import append, array, int8, uint8, zeros
 
-def load_mnist(dataset="training", digits=np.arange(10), path="."):
+#Acuired from: http://g.sweyla.com/blog/2012/mnist-numpy/
+def load_mnist(dataset="training", digits=np.arange(10), path="../../TrainingData"):
     """
     Loads MNIST files into 3D numpy arrays
 
