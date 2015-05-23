@@ -42,6 +42,7 @@ class Web():
             count += 1
 
         #----- Create Dendrites
+        print 'started making dendrites'
         for IN in self.inputneurons:
             for L2IN in self.inputneurons:
                 if 0 < Distance(IN.position, L2IN.position) <= conectionradius:
@@ -69,6 +70,7 @@ class Web():
                 if 0 < Distance(ON.position, L2ON.position) <= conectionradius:
                     ON.AddConnection(Dendrite(L2ON, ON))
 
+        print 'finished making dendrites'
         self.PlotSelf()
 
     #----- run initialization
@@ -194,7 +196,7 @@ class Web():
                 return True
         
     #----- Web plotting
-    def PlotSelf(self, arrows = True):
+    def PlotSelf(self, drawconnections = False):
         fig = plt.figure()
         ax = fig.add_subplot(111,projection='3d')
         x = []; y = []; z = []
@@ -202,6 +204,8 @@ class Web():
             x.append(IN.position[0])
             y.append(IN.position[1])
             z.append(IN.position[2])
+            if not drawconnections:
+                continue
             for d in IN.dendrites:
                 if d.currentinteraction == 0:
                     colour = 'b'
@@ -209,18 +213,15 @@ class Web():
                     continue
                 elif d.currentinteraction == 2:
                     colour = 'r'
-                if arrows:
-                    a = Arrow3D([d.fromneuron.position[0], d.toneuron.position[0]],[d.fromneuron.position[1], d.toneuron.position[1]],[d.fromneuron.position[2], d.toneuron.position[2]], mutation_scale=20, lw=1, arrowstyle="-|>", color=colour)
-                    ax.add_artist(a)
-                else:
-                    dendritex,dendritey,dendritez = d.Positions()
-                    ax.plot(dendritex, dendritey, dendritez,c=colour)
+                ax.plot(*d.Positions(),c=colour)
         ax.scatter(x,y,z,c='r',s=100)
         x = []; y = []; z = []
         for AN in self.activeneurons:
             x.append(AN.position[0])
             y.append(AN.position[1])
             z.append(AN.position[2])
+            if not drawconnections:
+                continue
             for d in AN.dendrites:
                 if d.currentinteraction == 0:
                     colour = 'b'
@@ -228,18 +229,15 @@ class Web():
                     continue
                 elif d.currentinteraction == 2:
                     colour = 'r'
-                if arrows:
-                    a = Arrow3D([d.fromneuron.position[0], d.toneuron.position[0]],[d.fromneuron.position[1], d.toneuron.position[1]],[d.fromneuron.position[2], d.toneuron.position[2]], mutation_scale=20, lw=1, arrowstyle="-|>", color=colour)
-                    ax.add_artist(a)
-                else:
-                    dendritex,dendritey,dendritez = d.Positions()
-                    ax.plot(dendritex, dendritey, dendritez,c=colour)
+                ax.plot(*d.Positions(),c=colour)
         ax.scatter(x,y,z,c='b',s=100)
         x = []; y = []; z = []
         for ON in self.outputneurons:
             x.append(ON.position[0])
             y.append(ON.position[1])
             z.append(ON.position[2])
+            if not drawconnections:
+                continue
             for d in ON.dendrites:
                 if d.currentinteraction == 0:
                     colour = 'b'
@@ -247,14 +245,11 @@ class Web():
                     continue
                 elif d.currentinteraction == 2:
                     colour = 'r'
-                if arrows:
-                    a = Arrow3D([d.fromneuron.position[0], d.toneuron.position[0]],[d.fromneuron.position[1], d.toneuron.position[1]],[d.fromneuron.position[2], d.toneuron.position[2]], mutation_scale=20, lw=1, arrowstyle="-|>", color=colour)
-                    ax.add_artist(a)
-                else:
-                    dendritex,dendritey,dendritez = d.Positions()
-                    ax.plot(dendritex, dendritey, dendritez,c=colour)
+                ax.plot(*d.Positions(),c=colour)
         ax.scatter(x,y,z,c='k',s=100)
-        
+        ax.set_xlabel('X axis')
+        ax.set_ylabel('Y axis')
+        ax.set_zlabel('Z axis')
         plt.show()
         
 def DetermineOutputDimensions(boxdimensions, nlocations):

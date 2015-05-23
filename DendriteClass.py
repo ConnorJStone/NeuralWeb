@@ -5,8 +5,6 @@ class Dendrite():
     maxstrength = 1000
 
     def __init__(self, toneuron, fromneuron):
-        print 'Dendrite: connection to: ' + str(toneuron.name)
-        print 'Dendrite: connection from: ' + str(fromneuron.name)
         #Initialize tracking parameters and store the neuron that it points to
         self.toneuron = toneuron
         self.fromneuron = fromneuron
