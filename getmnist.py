@@ -4,7 +4,7 @@ from array import array as pyarray
 from numpy import append, array, int8, uint8, zeros
 
 #Acuired from: http://g.sweyla.com/blog/2012/mnist-numpy/
-def load_mnist(dataset="training", digits=np.arange(10), path="../../TrainingData"):
+def load_mnist(dataset="training", digits=np.arange(10), path="."):
     """
     Loads MNIST files into 3D numpy arrays
 
@@ -12,9 +12,11 @@ def load_mnist(dataset="training", digits=np.arange(10), path="../../TrainingDat
     """
 
     if dataset == "training":
+        path = "./TrainingData"
         fname_img = os.path.join(path, 'train-images-idx3-ubyte')
         fname_lbl = os.path.join(path, 'train-labels-idx1-ubyte')
     elif dataset == "testing":
+        path = "./TestingData"
         fname_img = os.path.join(path, 't10k-images-idx3-ubyte')
         fname_lbl = os.path.join(path, 't10k-labels-idx1-ubyte')
     else:
