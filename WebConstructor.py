@@ -39,29 +39,19 @@ def Rectangle(ninput, noutput, nx, ny, nz, r):
 def IdealRectanglePlacement(nx, ny, nlocations):
     
     factorablenlocations = int(nlocations+1) if isprime(nlocations) else int(nlocations)
-    print 'even location:' + str(factorablenlocations)
-    xinitialization = int(nx) if nx > np.sqrt(float(nx)*factorablenlocations/ny) else int(np.sqrt(float(nx)*factorablenlocations/ny))
-    print 'X initialization:' + str(xinitialization)
+    xinitialization = int(nx*np.sqrt(factorablenlocations)/ny)
     while (float(factorablenlocations)/xinitialization)%1 != 0:
         xinitialization -= 1
 
-    print xinitialization
     yinitialization = factorablenlocations/xinitialization
-    print 'Y initialization: ' + str(yinitialization)
     xdistance = float(nx-1)/xinitialization
     ydistance = float(ny-1)/yinitialization
-
-    print 'xdistance: '+ str(xdistance)
-    print 'ydistance: ' + str(ydistance)
     return xdistance, ydistance
 
 def isprime(n):
     for i in xrange(2,int(np.sqrt(n))+1):
         if n%i == 0:
-            print 'not prime'
             return False
-
-    print 'prime'
     return True
     
 

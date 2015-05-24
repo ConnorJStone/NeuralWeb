@@ -6,8 +6,8 @@ class Neuron():
 
     #----- initiallization
     def __init__(self, name, position):
-        print 'Neuron: name: ' + str(name)
-        print 'Neuron: position: ' + str(position)
+        #print 'Neuron: name: ' + str(name)
+        #print 'Neuron: position: ' + str(position)
         self.name = name
         self.threshold = 1
         self.excitation = np.zeros(Neuron.resettime)
