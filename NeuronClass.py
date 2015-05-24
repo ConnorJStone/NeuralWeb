@@ -35,25 +35,20 @@ class Neuron():
         for d in self.dendrites:
             if d.Crosses(coefficients):
                 return True
+        return False
 
-    def DendritesPlotable(self):
-        x = []
-        y = []
-        z = []
-        for d in self.dendrites:
-            xt,yt,zt = d.Positions()
-            x.append(xt)
-            y.append(yt)
-            z.append(zt)
-        return x,y,z
-            
     #----- Reset functions
     def ResetDendriteDidfire(self):
         for d in self.dendrites:
             d.ResetDidfire()
 
     def ResetExcitation(self):
-        self.excitation = np.zeros(Neuron.resettime)
+        self.excitation[-1] -= self.threshold
+
+    def FullReset(self):
+        self.excitation *= 0 
+        for d in self.dendrites:
+            d.ResetDidfire()
         
     #----- Main loop                
     def TimeStep(self):
@@ -61,9 +56,14 @@ class Neuron():
         self.excitation[:-1] = self.excitation[1:]
         self.excitation[-1] = 0
 
-    def Activate(self):
+    def SendSignal(self):
         for d in self.dendrites:
-            self.excitation[-1] += d.GetSignal()
+            d.SendSignal(1)
+            
+    def Excite(self,signal):
+        self.excitation[-1] += signal
+
+    def Activate(self):
         if np.sum(self.excitation) > self.threshold:
             self.ResetExcitation()
             self.state[1] = True

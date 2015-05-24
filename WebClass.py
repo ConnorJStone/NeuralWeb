@@ -72,6 +72,8 @@ class Web():
     def Learn(self, inputstate, outputstate):
         keeplearning = True
         count = -1
+        activeinputneurons = self.GetActiveinputneurons(inputstate)
+        activeinterneurons = []
         self.ResetWeb()
         self.Randomize()
         
@@ -81,22 +83,27 @@ class Web():
                 print 'Randomization failed'
                 break
             self.TimeStep()
-            self.InputActivation(inputstate)
-            self.ConnectionActivation()
+            self.InputActivation(activeinputneurons)
+            self.ConnectionActivation(activeinterneurons)
+            activeinterneurons = self.ActivateNeurons()
             keeplearning = self.Reinforcement(outputstate)
             self.Prune()
 
     #----- main loop elements
+    def GetActiveinputneurons(self,inputstate):
+        activeneuons = []
+        for i in range(len(inputstate)):
+            if inputstate[i]:
+                activeneuons.append(self.inputneurons[i])
+        return activeneuons
+        
     def ResetWeb(self):
         for IN in self.inputneurons:
-            IN.ResetDendriteDidfire()
-            IN.ResetExcitation()
+            IN.FullReset()
         for AN in self.activeneurons:
-            AN.ResetDendriteDidfire()
-            AN.ResetExcitation()
+            AN.FullReset()
         for ON in self.outputneurons:
-            ON.ResetDendriteDidfire()
-            ON.ResetExcitation()
+            ON.FullReset()
 
     def TimeStep(self):
         for IN in self.inputneurons:
@@ -106,21 +113,23 @@ class Web():
         for ON in self.outputneurons:
             ON.TimeStep()
     
-    def InputActivation(self, inputstate):
-        if len(inputstate) != len(self.inputneurons):
-            raise ValueError('the length of the input state must be the same as the number of input neurons')
-            
-        for i in range(len(self.inputneurons)):
-            if inputstate[i]:
-                self.inputneurons[i].SetState(True)
+    def InputActivation(self, activeinputneurons):
+        for AN in activeinputneurons:
+            AN.SendSignal()
 
-    def ConnectionActivation(self):
-        for IN in self.inputneurons:
-            IN.Activate()
+    def ConnectionActivation(self, activeinterneurons):
+        for IN in activeinterneurons:
+            IN.SendSignal()
+
+    def ActivateNeurons(self):
+        activeinterneurons = []
+        #for IN in self.inputneurons:#maybe later
+        #    IN.Activate()
         for AN in self.activeneurons:
-            AN.Activate()
+            activeinterneurons.append(AN.Activate())
         for ON in self.outputneurons:
-            ON.Activate()
+            activeinterneurons.append(ON.Activate())
+        return activeinterneurons
 
     def Reinforcement(self, outputstate):
         allfalse = True

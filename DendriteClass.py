@@ -14,13 +14,13 @@ class Dendrite():
         self.didfire = False
 
     #----- Neuron info
-    def GetSignal(self):
-        if self.toneuron.GetState():
-            self.didfire = True
-            return self.interactions[self.currentinteraction][0]
-        else:
-            return 0
+    def SendSignal(self,signal):
+        self.toneuron.Excite(signal*self.interactions[self.currentinteraction])
+        self.didfire = True
 
+    def __str__(self):
+        return self.fromneuron.name + '-->' + self.toneuron.name
+        
     def GetName(self):
         return self.toneuron.name
 
