@@ -1,4 +1,4 @@
-import numpy as np
+import numpy as npx
 from random import randint
 
 class Neuron():
@@ -46,6 +46,7 @@ class Neuron():
         self.excitation[-1] -= self.threshold
 
     def FullReset(self):
+        self.state = [False, False]
         self.excitation *= 0 
         for d in self.dendrites:
             d.ResetDidfire()
@@ -67,6 +68,9 @@ class Neuron():
         if np.sum(self.excitation) > self.threshold:
             self.ResetExcitation()
             self.state[1] = True
+            return True
+        else:
+            return False
 
     def Dopamine(self):
         for d in self.dendrites:

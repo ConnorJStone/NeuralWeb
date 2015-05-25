@@ -30,17 +30,17 @@ class Web():
         #----- Create Dendrites
         print 'started making dendrites'
         for IN in self.inputneurons:
-            for L2IN in self.inputneurons:
-                if 0 < Distance(IN.position, L2IN.position) <= conectionradius:
-                    IN.AddConnection(Dendrite(L2IN, IN))
+            #for L2IN in self.inputneurons:
+            #    if 0 < Distance(IN.position, L2IN.position) <= conectionradius:
+            #        IN.AddConnection(Dendrite(L2IN, IN))
             for AN in self.activeneurons:
                 if Distance(IN.position, AN.position) <= conectionradius:
                     IN.AddConnection(Dendrite(AN, IN))
-                    AN.AddConnection(Dendrite(IN, AN))
+                    #AN.AddConnection(Dendrite(IN, AN))
             for ON in self.outputneurons:
                 if Distance(IN.position, ON.position) <= conectionradius:
                     IN.AddConnection(Dendrite(ON, IN))
-                    ON.AddConnection(Dendrite(IN, ON))
+                    #ON.AddConnection(Dendrite(IN, ON))
 
         for AN in self.activeneurons:
             for L2AN in self.activeneurons:
@@ -79,7 +79,8 @@ class Web():
         
         while keeplearning:
             count += 1
-            if count > len(self.activeneurons)*20:
+            print count
+            if (count > 5 and activeinterneurons == []) or count > np.sqrt(len(self.activeneurons)):
                 print 'Randomization failed'
                 break
             self.TimeStep()
@@ -87,7 +88,7 @@ class Web():
             self.ConnectionActivation(activeinterneurons)
             activeinterneurons = self.ActivateNeurons()
             keeplearning = self.Reinforcement(outputstate)
-            self.Prune()
+        self.Prune()
 
     #----- main loop elements
     def GetActiveinputneurons(self,inputstate):
@@ -118,6 +119,9 @@ class Web():
             AN.SendSignal()
 
     def ConnectionActivation(self, activeinterneurons):
+        print activeinterneurons
+        if len(activeinterneurons) == 0:
+            return
         for IN in activeinterneurons:
             IN.SendSignal()
 
@@ -126,9 +130,11 @@ class Web():
         #for IN in self.inputneurons:#maybe later
         #    IN.Activate()
         for AN in self.activeneurons:
-            activeinterneurons.append(AN.Activate())
+            if AN.Activate():
+                activeinterneurons.append(AN)
         for ON in self.outputneurons:
-            activeinterneurons.append(ON.Activate())
+            if ON.Activate():
+                activeinterneurons.append(ON)
         return activeinterneurons
 
     def Reinforcement(self, outputstate):

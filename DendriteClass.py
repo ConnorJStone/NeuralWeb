@@ -15,7 +15,7 @@ class Dendrite():
 
     #----- Neuron info
     def SendSignal(self,signal):
-        self.toneuron.Excite(signal*self.interactions[self.currentinteraction])
+        self.toneuron.Excite(signal*self.interactions[self.currentinteraction][0])
         self.didfire = True
 
     def __str__(self):
@@ -52,7 +52,7 @@ class Dendrite():
         if self.lock:
             return
         else:
-            self.interactions[self.currentinteraction][1] += 10
+            self.interactions[self.currentinteraction][1] += 100###
             if self.interactions[self.currentinteraction][1] >= Dendrite.maxstrength:
                 self.lock = True
                 print '---------------------Dendrite Locked-------------------------'
